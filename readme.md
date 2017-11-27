@@ -1,6 +1,6 @@
-##TP-Link HS100 Web Client
+## TP-Link HS100 Web Client
 
-###Why?
+### Why?
 
 TP-Link give you access to your HS-100 range devices through the KASA app on IOS / Android. That's fine, but what if you're
 in front of your desktop / tablet / etc, and don't have your phone to hand? How annoying to have to fish it out of your pocket
@@ -13,9 +13,9 @@ If you've just added TP-Link devices to a smart home network and want to be able
 examine the source of this project and utilise the calls within your own pages. Or just use this one :)
 
 
-##Heads up: Work in progress
+## Heads up: Work in progress
 
-###Able to:
+### Able to:
 
  - generate a UUID
  - capture credentials.
@@ -25,11 +25,11 @@ examine the source of this project and utilise the calls within your own pages. 
  - reflect whether the devices are currently on or not.
  
  
-###Notes:
+### Notes:
 
 Credentials are stored in a local cookie and not submitted to any server, except for the tpa api.
 
-###To do:
+### To do:
 
 Much.
 
