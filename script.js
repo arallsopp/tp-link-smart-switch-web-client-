@@ -73,8 +73,11 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
         $http.post("https://wap.tplinkcloud.com?token=" + $scope.token, request_obj).then(function mySuccess(response) {
             $scope.devices = (response.data.result.deviceList);
             console.log($scope.devices);
-
             if ($scope.devices.length) {
+                for (var i = 0; i < $scope.devices.length; i++) {
+                    $scope.getState(i);
+                }
+
                 $scope.selected_tab_index = 0;
             }
         });
@@ -136,7 +139,6 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
     }
     $scope.devices = [];
     $scope.selected_tab_index = 0;
-
 
 
     if (typeof ($scope.token) === "undefined") {
