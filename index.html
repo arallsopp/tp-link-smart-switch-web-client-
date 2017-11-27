@@ -49,9 +49,9 @@
                 <div class="md-list-item-text">
                     <h3>{{device.alias}}</h3>
                     <h4>{{device.deviceModel}} - {{device.deviceName}}</h4>
-                    <p>{{device.status}}</p>
+                    <p>{{device.status}} </p>
                 </div>
-                <md-switch ng-change="requestState($index,device.is_powered)" ng-model="device.is_powered"></md-switch>
+                <md-switch ng-change="setState($index,device.is_powered)" ng-model="device.is_powered"></md-switch>
                 <md-divider/>
             </md-list-item>
 

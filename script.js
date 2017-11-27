@@ -46,11 +46,31 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
         $http.post("https://wap.tplinkcloud.com?token=" + $scope.token, request_obj).then(function mySuccess(response) {
                 $scope.devices = (response.data.result.deviceList);
                 console.log($scope.devices);
+
             });
 
     };
 
-    $scope.requestState = function (device_index,device_state) {
+    $scope.getState = function(device_index){
+        var url = $scope.devices[device_index].appServerUrl;
+        var deviceId = $scope.devices[device_index].deviceId;
+
+        var request_obj = {
+            "method": "passthrough", "params": {
+                "deviceId": deviceId,
+                "requestData": "{\"system\":{\"get_sysinfo\":null},\"emeter\":{\"get_realtime\":null}}"
+            }
+        };
+        $http.post(url + "?token=" + $scope.token, request_obj).then(function mySuccess(response) {
+            window.response = response;
+            var testval = JSON.parse(response.data.result.responseData).system.get_sysinfo.relay_state;
+            console.log(device_index,testval,response);
+
+            $scope.devices[device_index].is_powered = (testval == true);
+        });
+    };
+
+    $scope.setState = function (device_index,device_state) {
         var url = $scope.devices[device_index].appServerUrl;
         var deviceId = $scope.devices[device_index].deviceId;
 
@@ -66,10 +86,20 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
         });
     };
 
+    $interval(function () {
+            for (var i = 0; i < $scope.devices.length; i++) {
+                $scope.getState(i);
+            }
+        }, 5 * 1000);
+
+
+
     $scope.UUID = $cookies.get('uuid');
     $scope.username = $cookies.get('username');
     $scope.password = $cookies.get('password');
     $scope.token = $cookies.get('token') | '';
     $scope.devices = [];
+
+
 
 });
