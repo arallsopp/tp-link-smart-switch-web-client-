@@ -10,7 +10,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
         var d = new Date().getTime();
         if (window.performance && typeof window.performance.now === "function") {
             d += performance.now();
-            ; //use high-precision timer if available
+            //use high-precision timer if available
         }
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = (d + Math.random() * 16) % 16 | 0;
@@ -25,41 +25,41 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
     };
 
     $scope.authenticate = function () {
-        $scope.UUID = $scope.getUUID();
+        $scope.tpl.UUID = $scope.getUUID();
 
         var auth_obj = {
             "method": "login", "params": {
                 "appType": "Kasa_Android",
-                "cloudUserName": $scope.username,
-                "cloudPassword": $scope.password,
-                "terminalUUID": $scope.UUID
+                "cloudUserName": $scope.tpl.username,
+                "cloudPassword": $scope.tpl.password,
+                "terminalUUID": $scope.tpl.UUID
             }
         };
 
         $http.post("https://wap.tplinkcloud.com/", auth_obj).then(function mySuccess(response) {
-            $scope.token = response.data.result.token;
+            $scope.tpl.token = response.data.result.token;
 
-            $cookies.put('uuid', $scope.UUID);
-            if($scope.store_credentials) {
-                $cookies.put('username', $scope.username);
-                $cookies.put('password', $scope.password);
-                $cookies.put('store_credentials',true);
+            $cookies.put('tpl_uuid', $scope.tpl.UUID);
+            if($scope.tpl.store_credentials) {
+                $cookies.put('tpl_username', $scope.tpl.username);
+                $cookies.put('tpl_password', $scope.tpl.password);
+                $cookies.put('tpl_store_credentials',true);
             }else{
-                $cookies.remove('username');
-                $cookies.remove('password');
-                $cookies.remove('store_credentials');
+                $cookies.remove('tpl_username');
+                $cookies.remove('tpl_password');
+                $cookies.remove('tpl_store_credentials');
             }
 
-            if($scope.store_token) {
-                $cookies.put('token', $scope.token);
-                $cookies.put('store_token',true);
+            if($scope.tpl.store_token) {
+                $cookies.put('tpl_token', $scope.tpl.token);
+                $cookies.put('tpl_store_token',true);
 
             }else{
-                $cookies.remove('token');
-                $cookies.remove('store_token');
+                $cookies.remove('tpl_token');
+                $cookies.remove('tpl_store_token');
             }
 
-            $scope.refreshDevices();
+            $scope.refreshTPLDevices();
 
         }, function myError(response) {
             $scope.myWelcome = response.statusText;
@@ -67,14 +67,14 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
 
     };
 
-    $scope.refreshDevices = function () {
+    $scope.refreshTPLDevices = function () {
         var request_obj = {"method": "getDeviceList"};
 
-        $http.post("https://wap.tplinkcloud.com?token=" + $scope.token, request_obj).then(function mySuccess(response) {
-            $scope.devices = (response.data.result.deviceList);
-            console.log($scope.devices);
-            if ($scope.devices.length) {
-                for (var i = 0; i < $scope.devices.length; i++) {
+        $http.post("https://wap.tplinkcloud.com?token=" + $scope.tpl.token, request_obj).then(function mySuccess(response) {
+            $scope.tpl.devices = (response.data.result.deviceList);
+            console.log($scope.tpl.devices);
+            if ($scope.tpl.devices.length) {
+                for (var i = 0; i < $scope.tpl.devices.length; i++) {
                     $scope.getState(i);
                 }
 
@@ -86,8 +86,8 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
     };
 
     $scope.getState = function (device_index) {
-        var url = $scope.devices[device_index].appServerUrl;
-        var deviceId = $scope.devices[device_index].deviceId;
+        var url = $scope.tpl.devices[device_index].appServerUrl;
+        var deviceId = $scope.tpl.devices[device_index].deviceId;
 
         var request_obj = {
             "method": "passthrough", "params": {
@@ -95,18 +95,18 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
                 "requestData": "{\"system\":{\"get_sysinfo\":null},\"emeter\":{\"get_realtime\":null}}"
             }
         };
-        $http.post(url + "?token=" + $scope.token, request_obj).then(function mySuccess(response) {
+        $http.post(url + "?token=" + $scope.tpl.token, request_obj).then(function mySuccess(response) {
             window.response = response;
             var testval = JSON.parse(response.data.result.responseData).system.get_sysinfo.relay_state;
             console.log(device_index, testval, response);
 
-            $scope.devices[device_index].is_powered = (testval == true);
+            $scope.tpl.devices[device_index].is_powered = (testval == true);
         });
     };
 
     $scope.setState = function (device_index, device_state) {
-        var url = $scope.devices[device_index].appServerUrl;
-        var deviceId = $scope.devices[device_index].deviceId;
+        var url = $scope.tpl.devices[device_index].appServerUrl;
+        var deviceId = $scope.tpl.devices[device_index].deviceId;
 
         var request_obj = {
             "method": "passthrough", "params": {
@@ -114,37 +114,39 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
                 "requestData": "{\"system\":{\"set_relay_state\":{\"state\":" + (device_state ? 1 : 0 ) + "}}}"
             }
         };
-        $http.post(url + "?token=" + $scope.token, request_obj).then(function mySuccess(response) {
+        $http.post(url + "?token=" + $scope.tpl.token, request_obj).then(function mySuccess(response) {
             window.response = response;
             console.log(response);
         });
     };
 
     $interval(function () {
-        for (var i = 0; i < $scope.devices.length; i++) {
+        for (var i = 0; i < $scope.tpl.devices.length; i++) {
             $scope.getState(i);
         }
     }, 5 * 1000);
 
-    $scope.store_token = $cookies.get('store_token') == "true";
-    $scope.store_credentials = $cookies.get('store_credentials') == "true";
 
-    $scope.UUID = $cookies.get('uuid');
-    if($scope.store_credentials){
-        $scope.username = $cookies.get('username');
-        $scope.password = $cookies.get('password');
+    $scope.tpl = {};
+    $scope.tpl.devices = [];
+    $scope.tpl.store_token = $cookies.get('tpl_store_token') == "true";
+    $scope.tpl.store_credentials = $cookies.get('tpl_store_credentials') == "true";
+    $scope.tpl.UUID = $cookies.get('tpl_uuid');
+
+    if($scope.tpl.store_credentials){
+        $scope.tpl.username = $cookies.get('tpl_username');
+        $scope.tpl.password = $cookies.get('tpl_password');
     }
-    if($scope.store_token) {
-        $scope.token = $cookies.get('token');
+    if($scope.tpl.store_token) {
+        $scope.tpl.token = $cookies.get('tpl_token');
     }
-    $scope.devices = [];
     $scope.selected_tab_index = 0;
 
 
-    if (typeof ($scope.token) === "undefined") {
-        $scope.token = '';
+    if (typeof ($scope.tpl.token) === "undefined") {
+        $scope.tpl.token = '';
     } else {
-        $scope.refreshDevices();
+        $scope.refreshTPLDevices();
     }
 
 });
