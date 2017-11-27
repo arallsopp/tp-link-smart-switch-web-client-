@@ -20,7 +20,7 @@
         <p>Todo:</p>
         <ul>
             <li><strike>generate UUID</strike> {{UUID}}</li>
-            <li>authenticate against service</li>
+            <li><strike>authenticate against service</strike> {{token}}</li>
             <li>find device ids</li>
             <li>make them actionable</li>
             <li>store config</li>
@@ -36,11 +36,13 @@
             <input ng-model="password">
         </md-input-container>
         <md-button class="md-raised md-primary" ng-click="authenticate()">Authenticate</md-button>
+        <p ng-if="token != ''">Your token is {{token}}</p>
     </md-content>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs//1.6.4/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-cookies.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-aria.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-messages.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.js"></script>
