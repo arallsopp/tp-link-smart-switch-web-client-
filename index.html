@@ -47,11 +47,10 @@
     <md-content>
         <md-list class="md-dense" flex>
             <md-subheader class="md-no-sticky">Devices</md-subheader>
-            <md-list-item class="md-3-line" ng-repeat="device in devices">
+            <md-list-item class="md-2-line" ng-repeat="device in devices">
                 <div class="md-list-item-text">
                     <h3>{{device.alias}}</h3>
-                    <h4>{{device.deviceModel}} - {{device.deviceName}}</h4>
-                    <p>{{device.status}} </p>
+                    <p>{{device.deviceModel}} - {{device.deviceName}}</p>
                 </div>
                 <md-switch ng-change="setState($index,device.is_powered)" ng-model="device.is_powered"></md-switch>
                 <md-divider/>
