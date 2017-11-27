@@ -4,19 +4,20 @@ app.config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('custom').primaryPalette('blue-grey').accentPalette('deep-orange');
 });
 
-app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cookies) {
+app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
 
     $scope.getUUID = function () {
-            var d = new Date().getTime();
-            if(window.performance && typeof window.performance.now === "function"){
-                d += performance.now();; //use high-precision timer if available
-            }
-            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = (d + Math.random()*16)%16 | 0;
-                d = Math.floor(d/16);
-                return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-            });
-            return uuid;
+        var d = new Date().getTime();
+        if (window.performance && typeof window.performance.now === "function") {
+            d += performance.now();
+            ; //use high-precision timer if available
+        }
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
     };
 
     $scope.showToast = function (msg) {
@@ -36,18 +37,18 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
         };
 
         $http.post("https://wap.tplinkcloud.com/", auth_obj).then(function mySuccess(response) {
-                $scope.token = response.data.result.token;
+            $scope.token = response.data.result.token;
 
-                $cookies.put('uuid', $scope.UUID);
-                $cookies.put('username', $scope.username);
-                $cookies.put('password', $scope.password);
-                $cookies.put('token', $scope.token);
+            $cookies.put('uuid', $scope.UUID);
+            $cookies.put('username', $scope.username);
+            $cookies.put('password', $scope.password);
+            $cookies.put('token', $scope.token);
 
-                $scope.refreshDevices();
+            $scope.refreshDevices();
 
-            }, function myError(response) {
-                $scope.myWelcome = response.statusText;
-            });
+        }, function myError(response) {
+            $scope.myWelcome = response.statusText;
+        });
 
     };
 
@@ -55,14 +56,18 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
         var request_obj = {"method": "getDeviceList"};
 
         $http.post("https://wap.tplinkcloud.com?token=" + $scope.token, request_obj).then(function mySuccess(response) {
-                $scope.devices = (response.data.result.deviceList);
-                console.log($scope.devices);
+            $scope.devices = (response.data.result.deviceList);
+            console.log($scope.devices);
 
-            });
+            if ($scope.devices.length) {
+                $scope.selectedTabIndex = 0;
+            }
+        });
+
 
     };
 
-    $scope.getState = function(device_index){
+    $scope.getState = function (device_index) {
         var url = $scope.devices[device_index].appServerUrl;
         var deviceId = $scope.devices[device_index].deviceId;
 
@@ -75,13 +80,13 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
         $http.post(url + "?token=" + $scope.token, request_obj).then(function mySuccess(response) {
             window.response = response;
             var testval = JSON.parse(response.data.result.responseData).system.get_sysinfo.relay_state;
-            console.log(device_index,testval,response);
+            console.log(device_index, testval, response);
 
             $scope.devices[device_index].is_powered = (testval == true);
         });
     };
 
-    $scope.setState = function (device_index,device_state) {
+    $scope.setState = function (device_index, device_state) {
         var url = $scope.devices[device_index].appServerUrl;
         var deviceId = $scope.devices[device_index].deviceId;
 
@@ -98,11 +103,10 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
     };
 
     $interval(function () {
-            for (var i = 0; i < $scope.devices.length; i++) {
-                $scope.getState(i);
-            }
-        }, 5 * 1000);
-
+        for (var i = 0; i < $scope.devices.length; i++) {
+            $scope.getState(i);
+        }
+    }, 5 * 1000);
 
 
     $scope.UUID = $cookies.get('uuid');
@@ -110,11 +114,12 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
     $scope.password = $cookies.get('password');
     $scope.token = $cookies.get('token');
     $scope.devices = [];
+    $scope.selectedTabIndex = 0;
 
 
-    if(typeof ($scope.token) === "undefined") {
+    if (typeof ($scope.token) === "undefined") {
         $scope.token = '';
-    }else{
+    } else {
         $scope.refreshDevices();
     }
 

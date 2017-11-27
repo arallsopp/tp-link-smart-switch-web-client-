@@ -16,28 +16,36 @@
         </div>
     </md-toolbar>
 
-    <md-tabs md-dynamic-height md-border-bottom>
-        <md-tab label="Devices" ng-disabled="!devices.length">
-            <md-content>
+    <md-tabs md-dynamic-height md-border-bottom md-selected="selectedTabIndex">
+        <md-tab label="Devices">
+            <md-content ng-if="devices.length">
                 <md-list class="md-dense" flex>
                     <md-subheader class="md-no-sticky">TP-Link Devices</md-subheader>
                     <md-list-item class="md-2-line" ng-repeat="device in devices">
                         <div class="md-list-item-text">
                             <h3>{{device.alias}}</h3>
+
                             <p>{{device.deviceModel}} - {{device.deviceName}}</p>
                         </div>
-                        <md-switch ng-change="setState($index,device.is_powered)" ng-model="device.is_powered"></md-switch>
+                        <md-switch ng-change="setState($index,device.is_powered)"
+                                   ng-model="device.is_powered"></md-switch>
                         <md-divider/>
                     </md-list-item>
                 </md-list>
-                <p ng-if="!devices.length">Visit the 'Settings' tab to set up your credentials</p>
                 <md-button class="md-raised md-primary" ng-click="refreshDevices()">Refresh Devices</md-button>
             </md-content>
+            <md-content ng-if="!devices.length" class="md-padding">
+                <h3>Warning</h3>
+                No devices were found. Please visit the 'Settings' tab to verify your credentials or request a new
+                token.</h3>
+            </md-content>
+
         </md-tab>
 
         <md-tab label="Settings">
             <md-content class="md-padding">
                 <h3>TP-Link Authentication</h3>
+
                 <p>
                     Please provide the credentials used to connect to your TP-Link account.
                 </p>
@@ -47,7 +55,7 @@
                     <md-input-container flex="50">
                         <label>Username/Email</label>
                         <input required type="email" ng-model="username"
-                               minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" />
+                               minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/"/>
 
                         <div ng-messages="username.$error" role="alert">
                             <div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
@@ -55,17 +63,26 @@
                             </div>
                         </div>
                     </md-input-container>
-                     <md-input-container flex="50">
+                    <md-input-container flex="50">
                         <label>Password</label>
-                        <input ng-model="password">
+                        <input required ng-model="password"/>
+
+                        <div ng-messages="password.$error" role="alert">
+                            <div ng-message-exp="['required']">
+                                Password must be provided.
+                            </div>
+                        </div>
                     </md-input-container>
                 </div>
-                <div>
-                    <md-button class="md-button md-raised md-primary" ng-click="authenticate()">Authenticate and Refresh Devices</md-button>
-                </div>
+                <md-button class="md-button md-raised md-primary" ng-click="authenticate()">Authenticate and Refresh
+                    Devices
+                </md-button>
 
-                <div ng-if="token != ''" class="md-padding">
+                <div ng-if="token != ''">
+                    <br/>
+                    <md-divider/>
                     <h3>Current Status</h3>
+
                     <p>Found {{devices.length}} devices using token: <code>{{token}}</code></p>
                 </div>
             </md-content>
@@ -82,6 +99,7 @@
                     <li><strike>make them actionable</strike></li>
                     <li><strike>store config so that it retrieves automatically</strike></li>
                     <li><strike>improve UI - tabs, probably</strike></li>
+                    <li>clear the validation errors on keyup</li>
                     <li>add remember me</li>
                 </ul>
             </md-content>
