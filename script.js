@@ -12,10 +12,17 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce) {
         )
     };
 
-    $scope.UUID = $scope.getUUID();
-
     $scope.showToast = function (msg) {
         $mdToast.show($mdToast.simple().textContent(msg).position('top right'))
     };
+
+    $scope.authenticate = function(){
+        alert('authenticate');
+    };
+
+    $scope.UUID = $scope.getUUID();
+
+
+
 
 });

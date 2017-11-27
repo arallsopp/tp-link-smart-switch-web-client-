@@ -26,6 +26,17 @@
             <li>store config</li>
         </ul>
     </md-content>
+    <md-content class="md-padding">
+        <md-input-container>
+            <label>Username</label>
+            <input ng-model="username">
+        </md-input-container>
+        <md-input-container>
+            <label>Password</label>
+            <input ng-model="password">
+        </md-input-container>
+        <md-button class="md-raised md-primary" ng-click="authenticate()">Authenticate</md-button>
+    </md-content>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs//1.6.4/angular.min.js"></script>
