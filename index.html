@@ -46,7 +46,7 @@
             <md-content class="md-padding">
                 <h3>TP-Link Authentication</h3>
 
-                <p>
+                <p class="md-caption">
                     Please provide the credentials used to connect to your TP-Link account.
                 </p>
 
@@ -83,7 +83,7 @@
                     </md-input-container>
                     <md-input-container flex="50">
                         <md-checkbox ng-model="store_token" aria-label="store token">
-                             Allow this browser to store the authentication token.
+                            Allow this browser to store the authentication token.
                         </md-checkbox>
                     </md-input-container>
 
@@ -98,25 +98,49 @@
                     <md-divider/>
                     <h3>Current Status</h3>
 
-                    <p>Found {{devices.length}} devices using token: <code>{{token}}</code></p>
+                    <p class="md-caption">Found {{devices.length}} devices using token: <code>{{token}}</code></p>
                 </div>
             </md-content>
 
         </md-tab>
 
-        <md-tab label="Notes">
+        <md-tab label="About">
             <md-content flex layout-padding>
-                <p>Todo:</p>
-                <ul>
-                    <li><strike>generate UUID</strike> {{UUID}}</li>
-                    <li><strike>authenticate against service</strike> {{token}}</li>
-                    <li><strike>find device ids</strike></li>
-                    <li><strike>make them actionable</strike></li>
-                    <li><strike>store config so that it retrieves automatically</strike></li>
-                    <li><strike>improve UI - tabs, probably</strike></li>
-                    <li>clear the validation errors on keyup</li>
-                    <li>add remember me</li>
-                </ul>
+                <h3>About this application</h3>
+
+                <p>This webpage uses angular services to build a web control surface for the TP-Link series of smart
+                    plugs. TP-Link's own official app (Kasa) only runs on iOS and Android devices, so those of you
+                    with other tablets, mobiles, or desktops get left in the cold. This page attempts to address that.</p>
+
+                <md-divider/>
+                <div class="md-caption">
+                <p>In use, the Kasa app generates a unique ID, then combines this with the registration information you
+                supply at sign-up to retrieve a secure token from a TP-Link hosted API service. Requests for smart plug
+                availability, status and relay states are sent with this token to protect your privacy.</p>
+
+                <p>This application is able to generate a random UUID of its own, capture your credentials, and pass these
+                to the TP-Link hosted API service to obtain a genuine token. That token can then be used to list the devices
+                which are present, indicate their status, and allow you to switch them on/off from anywhere you like.</p>
+
+                <p>Information is only sent to and from the TP-Link APIs, and is not exposed to any other server. If you
+                opt to retain your login credentials and/or authentication token, these are stored in cookies within your
+                browser. They are not released to me or anyone else.</p>
+
+                <p>To access your plugs, make sure they have remote control enabled, and are registered with the
+                    official Kasa App from TP-Link (<a
+                    href="http://www.tp-link.com/us/home-networking/smart-home/kasa.html" target="_blank">Get
+                    Kasa here</a>). Unfortunately, I don't know a way to perform the registration without (at least)
+                    temporary access to the official app, but once registered you can send requests from any modern browser.</p>
+
+                <p>The full source for this project is available for free, online at <a
+                        href="https://github.com/arallsopp/tp-link-smart-switch-web-client-" target="_blank">GitHub</a>.
+                </p>
+
+                <p>I hope you are able to make use of it.</p>
+                </div>
+
+                <p>Andy Allsopp</p>
+
             </md-content>
         </md-tab>
 
