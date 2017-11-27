@@ -40,9 +40,24 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
             $scope.token = response.data.result.token;
 
             $cookies.put('uuid', $scope.UUID);
-            $cookies.put('username', $scope.username);
-            $cookies.put('password', $scope.password);
-            $cookies.put('token', $scope.token);
+            if($scope.store_credentials) {
+                $cookies.put('username', $scope.username);
+                $cookies.put('password', $scope.password);
+                $cookies.put('store_credentials',true);
+            }else{
+                $cookies.remove('username');
+                $cookies.remove('password');
+                $cookies.remove('store_credentials');
+            }
+
+            if($scope.store_token) {
+                $cookies.put('token', $scope.token);
+                $cookies.put('store_token',true);
+
+            }else{
+                $cookies.remove('token');
+                $cookies.remove('store_token');
+            }
 
             $scope.refreshDevices();
 
@@ -60,7 +75,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
             console.log($scope.devices);
 
             if ($scope.devices.length) {
-                $scope.selectedTabIndex = 0;
+                $scope.selected_tab_index = 0;
             }
         });
 
@@ -108,13 +123,20 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
         }
     }, 5 * 1000);
 
+    $scope.store_token = $cookies.get('store_token') == "true";
+    $scope.store_credentials = $cookies.get('store_credentials') == "true";
 
     $scope.UUID = $cookies.get('uuid');
-    $scope.username = $cookies.get('username');
-    $scope.password = $cookies.get('password');
-    $scope.token = $cookies.get('token');
+    if($scope.store_credentials){
+        $scope.username = $cookies.get('username');
+        $scope.password = $cookies.get('password');
+    }
+    if($scope.store_token) {
+        $scope.token = $cookies.get('token');
+    }
     $scope.devices = [];
-    $scope.selectedTabIndex = 0;
+    $scope.selected_tab_index = 0;
+
 
 
     if (typeof ($scope.token) === "undefined") {
