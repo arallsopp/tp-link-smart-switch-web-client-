@@ -33,3 +33,6 @@ Credentials are stored in a local cookie and not submitted to any server, except
 
 Much.
 
+### Implementation:
+
+See codepen at: https://codepen.io/arallsopp/pen/pdZQWG
