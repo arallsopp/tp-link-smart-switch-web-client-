@@ -13,25 +13,26 @@ If you've just added TP-Link devices to a smart home network and want to be able
 examine the source of this project and utilise the calls within your own pages. Or just use this one :)
 
 
-## Heads up: Work in progress
+### Features:
 
-### Able to:
-
- - generate a UUID
+ - generates a UUID
  - capture credentials.
- - authenticate against the tp api service to get a token
- - list the devices stored against your account
- - send on/off commands to them.
- - reflect whether the devices are currently on or not.
+ - authenticates against the tp-link api service to get a secure authentication token
+ - uses that token to:
+  - list the devices stored against your account
+  - send on/off commands to them.
+  - reflect whether the devices are currently on or not.
+ - optionally stores the token (and/or credentials) so that you can jump straight to it next time.
  
  
 ### Notes:
 
-Credentials are stored in a local cookie and not submitted to any server, except for the tpa api.
+If you opt to store your token or credentials, these are held in a browser cookie on *your* machine. In use, they are sent directly from your
+browser to the TP-Link API endpoint via https, and are not sent to any other web host.
 
 ### To do:
 
-Much.
+Look for further features.
 
 ### Implementation:
 
