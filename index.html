@@ -23,8 +23,9 @@
             <li><strike>authenticate against service</strike> {{token}}</li>
             <li><strike>find device ids</strike></li>
             <li><strike>make them actionable</strike></li>
-            <li>store config</li>
-            <li>improve UI</li>
+            <li><strike>store config so that it retrieves automatically</strike></li>
+            <li>improve UI - tabs, probably</li>
+            <li>add remember me</li>
         </ul>
     </md-content>
     <md-content class="md-padding">
@@ -40,7 +41,7 @@
     </md-content>
     <md-content ng-if="token != ''" class="md-padding">
     <p>Your token is {{token}}</p>
-    <md-button class="md-raised md-primary" ng-click="getDevices()">Get Devices</md-button>
+    <md-button class="md-raised md-primary" ng-click="refreshDevices()">Refresh Devices</md-button>
     </md-content>
 
     <md-content>

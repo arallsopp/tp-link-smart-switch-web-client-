@@ -35,12 +35,15 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
                 $cookies.put('password', $scope.password);
                 $cookies.put('token', $scope.token);
 
+                $scope.refreshDevices();
+
             }, function myError(response) {
                 $scope.myWelcome = response.statusText;
             });
+
     };
 
-    $scope.getDevices = function () {
+    $scope.refreshDevices = function () {
         var request_obj = {"method": "getDeviceList"};
 
         $http.post("https://wap.tplinkcloud.com?token=" + $scope.token, request_obj).then(function mySuccess(response) {
@@ -97,9 +100,14 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
     $scope.UUID = $cookies.get('uuid');
     $scope.username = $cookies.get('username');
     $scope.password = $cookies.get('password');
-    $scope.token = $cookies.get('token') | '';
+    $scope.token = $cookies.get('token');
     $scope.devices = [];
 
 
+    if(typeof ($scope.token) === "undefined") {
+        $scope.token = '';
+    }else{
+        $scope.refreshDevices();
+    }
 
 });
