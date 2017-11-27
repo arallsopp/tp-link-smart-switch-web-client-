@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngMaterial','ngCookies']);
+var app = angular.module('myApp', ['ngMaterial', 'ngCookies']);
 
 app.config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('custom').primaryPalette('blue-grey').accentPalette('deep-orange');
@@ -6,9 +6,8 @@ app.config(function ($mdThemingProvider) {
 
 app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cookies) {
 
-    $scope.getUUID = function(){
-        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    $scope.getUUID = function () {
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         )
     };
 
@@ -16,8 +15,8 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
         $mdToast.show($mdToast.simple().textContent(msg).position('top right'))
     };
 
-    $scope.authenticate = function(){
-        $scope.UUID=$scope.getUUID();
+    $scope.authenticate = function () {
+        $scope.UUID = $scope.getUUID();
 
         var auth_obj = {
             "method": "login", "params": {
@@ -28,30 +27,44 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $sce, $cook
             }
         };
 
-        $http.post("https://wap.tplinkcloud.com/",auth_obj)
-        .then(function mySuccess(response) {
-            $scope.token = response.data.result.token;
+        $http.post("https://wap.tplinkcloud.com/", auth_obj).then(function mySuccess(response) {
+                $scope.token = response.data.result.token;
 
-            $cookies.put('uuid',$scope.UUID);
-            $cookies.put('username',$scope.username);
-            $cookies.put('password',$scope.password);
-            $cookies.put('token',$scope.token);
+                $cookies.put('uuid', $scope.UUID);
+                $cookies.put('username', $scope.username);
+                $cookies.put('password', $scope.password);
+                $cookies.put('token', $scope.token);
 
-        }, function myError(response) {
-            $scope.myWelcome = response.statusText;
-        });
+            }, function myError(response) {
+                $scope.myWelcome = response.statusText;
+            });
     };
 
-    $scope.getDevices = function() {
-        var request_obj = {"method":"getDeviceList"};
+    $scope.getDevices = function () {
+        var request_obj = {"method": "getDeviceList"};
 
-        $http.post("https://wap.tplinkcloud.com?token=" + $scope.token,request_obj)
-            .then(function mySuccess(response) {
+        $http.post("https://wap.tplinkcloud.com?token=" + $scope.token, request_obj).then(function mySuccess(response) {
                 $scope.devices = (response.data.result.deviceList);
                 console.log($scope.devices);
             });
 
-    }
+    };
+
+    $scope.requestState = function (device_index,device_state) {
+        var url = $scope.devices[device_index].appServerUrl;
+        var deviceId = $scope.devices[device_index].deviceId;
+
+        var request_obj = {
+            "method": "passthrough", "params": {
+                "deviceId": deviceId,
+                "requestData": "{\"system\":{\"set_relay_state\":{\"state\":" + (device_state ? 1 : 0 ) + "}}}"
+            }
+        };
+        $http.post(url + "?token=" + $scope.token, request_obj).then(function mySuccess(response) {
+            window.response = response;
+            console.log(response);
+        });
+    };
 
     $scope.UUID = $cookies.get('uuid');
     $scope.username = $cookies.get('username');

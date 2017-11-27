@@ -51,7 +51,8 @@
                     <h4>{{device.deviceModel}} - {{device.deviceName}}</h4>
                     <p>{{device.status}}</p>
                 </div>
-               <md-divider/>
+                <md-switch ng-change="requestState($index,device.is_powered)" ng-model="device.is_powered"></md-switch>
+                <md-divider/>
             </md-list-item>
 
         </md-list>
