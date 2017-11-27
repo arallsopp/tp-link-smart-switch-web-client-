@@ -16,49 +16,63 @@
         </div>
     </md-toolbar>
 
-    <md-content class="md-padding">
-        <p>Todo:</p>
-        <ul>
-            <li><strike>generate UUID</strike> {{UUID}}</li>
-            <li><strike>authenticate against service</strike> {{token}}</li>
-            <li><strike>find device ids</strike></li>
-            <li><strike>make them actionable</strike></li>
-            <li><strike>store config so that it retrieves automatically</strike></li>
-            <li>improve UI - tabs, probably</li>
-            <li>add remember me</li>
-        </ul>
-    </md-content>
-    <md-content class="md-padding">
-        <md-input-container>
-            <label>Username</label>
-            <input ng-model="username">
-        </md-input-container>
-        <md-input-container>
-            <label>Password</label>
-            <input ng-model="password">
-        </md-input-container>
-        <md-button class="md-raised md-primary" ng-click="authenticate()">Authenticate</md-button>
-    </md-content>
-    <md-content ng-if="token != ''" class="md-padding">
-    <p>Your token is {{token}}</p>
-    <md-button class="md-raised md-primary" ng-click="refreshDevices()">Refresh Devices</md-button>
-    </md-content>
+    <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Devices">
+            <md-content>
+                <md-list class="md-dense" flex>
+                    <md-subheader class="md-no-sticky">TP-Link Devices</md-subheader>
+                    <md-list-item class="md-2-line" ng-repeat="device in devices">
+                        <div class="md-list-item-text">
+                            <h3>{{device.alias}}</h3>
+                            <p>{{device.deviceModel}} - {{device.deviceName}}</p>
+                        </div>
+                        <md-switch ng-change="setState($index,device.is_powered)" ng-model="device.is_powered"></md-switch>
+                        <md-divider/>
+                    </md-list-item>
 
-    <md-content>
-        <md-list class="md-dense" flex>
-            <md-subheader class="md-no-sticky">Devices</md-subheader>
-            <md-list-item class="md-2-line" ng-repeat="device in devices">
-                <div class="md-list-item-text">
-                    <h3>{{device.alias}}</h3>
-                    <p>{{device.deviceModel}} - {{device.deviceName}}</p>
+                </md-list>
+                <md-button class="md-raised md-primary" ng-click="refreshDevices()">Refresh Devices</md-button>
+            </md-content>
+        </md-tab>
+
+        <md-tab label="Settings">
+            <md-content class="md-padding">
+                <div layout="column" layout-gt-xs="row">
+
+                    <md-input-container flex="50">
+                        <label>Username</label>
+                        <input ng-model="username">
+                    </md-input-container>
+                     <md-input-container flex="50">
+                        <label>Password</label>
+                        <input ng-model="password">
+                    </md-input-container>
                 </div>
-                <md-switch ng-change="setState($index,device.is_powered)" ng-model="device.is_powered"></md-switch>
-                <md-divider/>
-            </md-list-item>
+                <div>
+                    <md-button class="md-button md-raised md-primary" ng-click="authenticate()">Authenticate</md-button>
+                </div>
+            </md-content>
+            <md-content ng-if="token != ''" class="md-padding">
+            <p>Your token is {{token}}</p>
+            </md-content>
+        </md-tab>
 
-        </md-list>
-    </md-content>
+        <md-tab label="Notes">
+            <md-content class="md-padding">
+                <p>Todo:</p>
+                <ul>
+                    <li><strike>generate UUID</strike> {{UUID}}</li>
+                    <li><strike>authenticate against service</strike> {{token}}</li>
+                    <li><strike>find device ids</strike></li>
+                    <li><strike>make them actionable</strike></li>
+                    <li><strike>store config so that it retrieves automatically</strike></li>
+                    <li><strike>improve UI - tabs, probably</strike></li>
+                    <li>add remember me</li>
+                </ul>
+            </md-content>
+        </md-tab>
 
+    </md-tabs>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
