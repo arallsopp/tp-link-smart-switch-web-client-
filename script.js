@@ -1,10 +1,13 @@
-var app = angular.module('myApp', ['ngMaterial', 'ngCookies']);
+var app = angular.module('myApp', ['ngMaterial','ngCookies']);
 
-app.config(function ($mdThemingProvider) {
-    $mdThemingProvider.theme('custom').primaryPalette('blue-grey').accentPalette('deep-orange');
-});
+myDash.$inject = ['$scope', '$mdToast','$http','$interval','$cookies'];
 
-app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
+angular.module('myApp').controller('dash', myDash)
+    .config(['$mdThemingProvider',function($mdThemingProvider) {
+        $mdThemingProvider.theme('custom').primaryPalette('blue-grey').accentPalette('deep-orange');
+    }]);
+
+function myDash($scope, $mdToast, $http, $interval, $cookies) {
 
     $scope.getUUID = function () {
         var d = new Date().getTime();
@@ -150,5 +153,4 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
         }
     }, $scope.tpl.refresh_rate * 1000);
 
-
-});
+}
