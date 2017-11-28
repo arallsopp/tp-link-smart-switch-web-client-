@@ -24,7 +24,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
         $mdToast.show($mdToast.simple().textContent(msg).position('top right'))
     };
 
-    $scope.authenticate = function () {
+    $scope.tpl_authenticate = function () {
         $scope.tpl.UUID = $scope.getUUID();
 
         var auth_obj = {
@@ -59,7 +59,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
                 $cookies.remove('tpl_store_token');
             }
 
-            $scope.refreshTPLDevices();
+            $scope.tpl_refreshDevices();
 
         }, function myError(response) {
             $scope.myWelcome = response.statusText;
@@ -67,7 +67,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
 
     };
 
-    $scope.refreshTPLDevices = function () {
+    $scope.tpl_refreshDevices = function () {
         var request_obj = {"method": "getDeviceList"};
 
         $http.post("https://wap.tplinkcloud.com?token=" + $scope.tpl.token, request_obj).then(function mySuccess(response) {
@@ -75,7 +75,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
             console.log($scope.tpl.devices);
             if ($scope.tpl.devices.length) {
                 for (var i = 0; i < $scope.tpl.devices.length; i++) {
-                    $scope.getState(i);
+                    $scope.tpl_getState(i);
                 }
 
                 $scope.selected_tab_index = 0;
@@ -85,7 +85,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
 
     };
 
-    $scope.getState = function (device_index) {
+    $scope.tpl_getState = function (device_index) {
         var url = $scope.tpl.devices[device_index].appServerUrl;
         var deviceId = $scope.tpl.devices[device_index].deviceId;
 
@@ -104,7 +104,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
         });
     };
 
-    $scope.setState = function (device_index, device_state) {
+    $scope.tpl_setState = function (device_index, device_state) {
         var url = $scope.tpl.devices[device_index].appServerUrl;
         var deviceId = $scope.tpl.devices[device_index].deviceId;
 
@@ -122,7 +122,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
 
     $interval(function () {
         for (var i = 0; i < $scope.tpl.devices.length; i++) {
-            $scope.getState(i);
+            $scope.tpl_getState(i);
         }
     }, 5 * 1000);
 
@@ -146,7 +146,7 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
     if (typeof ($scope.tpl.token) === "undefined") {
         $scope.tpl.token = '';
     } else {
-        $scope.refreshTPLDevices();
+        $scope.tpl_refreshDevices();
     }
 
 });
