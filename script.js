@@ -120,14 +120,9 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
         });
     };
 
-    $interval(function () {
-        for (var i = 0; i < $scope.tpl.devices.length; i++) {
-            $scope.tpl_getState(i);
-        }
-    }, 5 * 1000);
-
-
     $scope.tpl = {};
+    $scope.tpl.refresh_rate = 5; //check every 5 seconds. Set this as you fancy.
+
     $scope.tpl.devices = [];
     $scope.tpl.store_token = $cookies.get('tpl_store_token') == "true";
     $scope.tpl.store_credentials = $cookies.get('tpl_store_credentials') == "true";
@@ -148,5 +143,12 @@ app.controller('dash', function ($scope, $mdToast, $http, $interval, $cookies) {
     } else {
         $scope.tpl_refreshDevices();
     }
+
+    $interval(function () {
+        for (var i = 0; i < $scope.tpl.devices.length; i++) {
+            $scope.tpl_getState(i);
+        }
+    }, $scope.tpl.refresh_rate * 1000);
+
 
 });
