@@ -105,11 +105,21 @@ function myDash($scope, $mdToast, $http, $interval, $cookies) {
         $http.post(url + "?token=" + $scope.tpl.token, request_obj).then(function mySuccess(response) {
             window.response = response;
             var testval = JSON.parse(response.data.result.responseData).system.get_sysinfo.relay_state;
-            console.log(device_index, testval, response);
+            $scope.tpl_showRealTime(response);            /* for emeter devices, also show this in the console */
 
             $scope.tpl.devices[device_index].is_powered = (testval == true);
         });
     };
+
+    $scope.tpl_showRealTime = function(response){
+        var has_emeter = JSON.parse(response.data.result.responseData).emeter.hasOwnProperty('get_realtime');
+        if (has_emeter){
+            var device_name = JSON.parse(response.data.result.responseData).system.get_sysinfo.alias;
+            var realtime = JSON.parse(response.data.result.responseData).emeter.get_realtime;
+            console.log("Device " + device_name + " is drawing " + realtime.current + "amps and is connected to a " + realtime.voltage + "v supply");
+        }
+
+    }
 
     $scope.tpl_setState = function (device_index, device_state) {
         var url = $scope.tpl.devices[device_index].appServerUrl;
