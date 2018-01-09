@@ -51,10 +51,6 @@ function myDash($scope, $mdToast, $http, $interval, $cookies) {
                 $cookies.put('tpl_password', $scope.tpl.password,{ expires: exp});
                 $cookies.put('tpl_store_credentials',true,{ expires: exp});
 
-                $cookies.put('someToken','blabla',{
-
-                });
-
             }else{
                 $cookies.remove('tpl_username');
                 $cookies.remove('tpl_password');
