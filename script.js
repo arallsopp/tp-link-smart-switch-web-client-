@@ -40,13 +40,21 @@ function myDash($scope, $mdToast, $http, $interval, $cookies) {
         };
 
         $http.post("https://wap.tplinkcloud.com/", auth_obj).then(function mySuccess(response) {
+            var now = new Date();
+            var exp = new Date(now.getFullYear()+1, now.getMonth(), now.getDate());
+
             $scope.tpl.token = response.data.result.token;
 
-            $cookies.put('tpl_uuid', $scope.tpl.UUID);
+            $cookies.put('tpl_uuid', $scope.tpl.UUID,{expires: exp});
             if($scope.tpl.store_credentials) {
-                $cookies.put('tpl_username', $scope.tpl.username);
-                $cookies.put('tpl_password', $scope.tpl.password);
-                $cookies.put('tpl_store_credentials',true);
+                $cookies.put('tpl_username', $scope.tpl.username,{ expires: exp});
+                $cookies.put('tpl_password', $scope.tpl.password,{ expires: exp});
+                $cookies.put('tpl_store_credentials',true,{ expires: exp});
+
+                $cookies.put('someToken','blabla',{
+
+                });
+
             }else{
                 $cookies.remove('tpl_username');
                 $cookies.remove('tpl_password');
@@ -54,8 +62,8 @@ function myDash($scope, $mdToast, $http, $interval, $cookies) {
             }
 
             if($scope.tpl.store_token) {
-                $cookies.put('tpl_token', $scope.tpl.token);
-                $cookies.put('tpl_store_token',true);
+                $cookies.put('tpl_token', $scope.tpl.token,{ expires: exp});
+                $cookies.put('tpl_store_token',true,{ expires: exp});
 
             }else{
                 $cookies.remove('tpl_token');
