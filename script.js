@@ -114,13 +114,23 @@ function myDash($scope, $mdToast, $http, $interval, $cookies) {
     $scope.tpl_setState = function (device_index, device_state) {
         var url = $scope.tpl.devices[device_index].appServerUrl;
         var deviceId = $scope.tpl.devices[device_index].deviceId;
+        var request_obj;
 
-        var request_obj = {
-            "method": "passthrough", "params": {
-                "deviceId": deviceId,
-                "requestData": "{\"system\":{\"set_relay_state\":{\"state\":" + (device_state ? 1 : 0 ) + "}}}"
-            }
-        };
+        if(confirm("is this a bulb?")) {
+            request_obj = {
+                "method": "passthrough", "params": {
+                    "deviceId": deviceId,
+                    "requestData": "{\"transition_light_state\":{\"on_off\":" + (device_state ? 1 : 0 ) + "}}"
+                }
+            };
+        }else{
+            request_obj = {
+                "method": "passthrough", "params": {
+                    "deviceId": deviceId,
+                    "requestData": "{\"system\":{\"set_relay_state\":{\"state\":" + (device_state ? 1 : 0 ) + "}}}"
+                }
+            };
+        }
         $http.post(url + "?token=" + $scope.tpl.token, request_obj).then(function mySuccess(response) {
             window.response = response;
             console.log(response);
